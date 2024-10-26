@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import os  # Import the os module
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='src/templates')  # Update template folder path
 
 # Generate a secure random secret key
-app.secret_key = os.urandom(24)  # Generates a random 24-byte string
+app.secret_key = os.urandom(24)
 
 # Sample user data (username: password)
 users = {
