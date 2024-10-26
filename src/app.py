@@ -1,15 +1,16 @@
 # src/app.py
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
+import os
 
 app = Flask(__name__)
 
 # Connect to XAMPP MySQL Database
 db = mysql.connector.connect(
     host="localhost",
-    user="your_username",
-    password="your_password",
-    database="your_database"
+    user="root",
+    password="",
+    database="CI-CD"
 )
 
 @app.route('/')
