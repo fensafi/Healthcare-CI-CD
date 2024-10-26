@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 # Generate a secure random secret key
 app.secret_key = os.urandom(24)
