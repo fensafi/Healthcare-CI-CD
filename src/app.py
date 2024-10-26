@@ -1,17 +1,16 @@
-# src/app.py
-from flask import Flask, render_template, request, redirect, url_for
-import mysql.connector
-import os
+from flask import Flask, render_template, request, redirect, url_for, flash
+import os  # Import the os module
 
 app = Flask(__name__)
 
-# Connect to XAMPP MySQL Database
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="CI-CD"
-)
+# Generate a secure random secret key
+app.secret_key = os.urandom(24)  # Generates a random 24-byte string
+
+# Sample user data (username: password)
+users = {
+    "admin": "password123",
+    "user1": "mypassword",
+}
 
 @app.route('/')
 def index():
@@ -22,14 +21,14 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-        user = cursor.fetchone()
-        cursor.close()
-        if user:
+
+        # Check if the username exists and the password matches
+        if username in users and users[username] == password:
             return "Login successful!"
         else:
-            return "Invalid credentials!"
+            flash("Invalid credentials, please try again.")
+            return redirect(url_for('login'))
+
     return render_template('login.html')
 
 if __name__ == "__main__":
