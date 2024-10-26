@@ -1,4 +1,4 @@
-from app import index 
+from src.app import index 
 
 
 
