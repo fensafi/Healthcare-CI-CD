@@ -14,7 +14,7 @@ users = {
 
 @app.route('/')
 def index():
-    return "Healthcare CI-CD Pipeline"
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
