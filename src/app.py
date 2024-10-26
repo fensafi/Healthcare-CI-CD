@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 import os
 
-app = Flask(__name__, template_folder='templates')
+# Specify the path to the templates folder
+app = Flask(__name__, template_folder='../templates')
 
 # Generate a secure random secret key
 app.secret_key = os.urandom(24)
