@@ -63,3 +63,18 @@ jobs:
       run: |
         chmod +x src/rollback.sh
         ./src/rollback.sh
+
+
+    - name: Set up Git user
+      run: |
+        git config --global user.email "freshtaensafi34@gmail.com"
+        git config --global user.name "Freshta Ensafi"
+
+    - name: Add Heroku remote
+      run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git
+
+    - name: Login to Heroku
+    run: heroku auth:token -i ${{ secrets.HEROKU_API_KEY }}
+
+
+
