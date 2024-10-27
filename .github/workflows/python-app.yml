@@ -40,13 +40,23 @@ jobs:
           export PYTHONPATH=src
           pytest
 
+      - name: Send Email Notification on Success
+        if: success()
+        run: |
+          python send_email.py "Build and tests passed! 🎉"
+
+      - name: Send Email Notification on Failure
+        if: failure()
+        run: |
+          python send_email.py "Build failed. Please check the logs!"
+
       - name: Set up Git user
         run: |
           git config --global user.email "freshtaensafi34@gmail.com"
           git config --global user.name "Freshta Ensafi"
 
       - name: Add Heroku remote
-        run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git || echo "Remote already exists"
+        run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git
 
       - name: Backup current version
         run: |
@@ -55,12 +65,17 @@ jobs:
 
       - name: Deploy to Heroku
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  # Pass the Heroku API key to the environment
         run: |
-          git push https://oauth:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/polar-mesa-86503.git main
+          git remote add heroku https://git.heroku.com/polar-mesa-86503.git || echo "Remote already exists"
+          git push https://git.heroku.com/polar-mesa-86503.git main
+
 
       - name: Rollback on failure
         if: failure()
         run: |
           chmod +x src/rollback.sh
           ./src/rollback.sh
+
+      - name: Login to Heroku
+        run: echo "HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }}" | heroku auth:token
