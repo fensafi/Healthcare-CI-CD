@@ -17,67 +17,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python 3.10
-      run: actions/setup-python@v3
-      with:
-        python-version: "3.10"
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Lint with flake8
-      run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Test with pytest
-      run: |
-        export PYTHONPATH=src
-        pytest
+      - name: Test with pytest
+        run: |
+          export PYTHONPATH=src
+          pytest
 
-    - name: Send Email Notification on Success
-      if: success()
-      run: |
-        python send_email.py "Build and tests passed! 🎉"
+      - name: Send Email Notification on Success
+        if: success()
+        run: |
+          python send_email.py "Build and tests passed! 🎉"
 
-    - name: Send Email Notification on Failure
-      if: failure()
-      run: |
-        python send_email.py "Build failed. Please check the logs!"
+      - name: Send Email Notification on Failure
+        if: failure()
+        run: |
+          python send_email.py "Build failed. Please check the logs!"
 
+      - name: Backup current version
+        run: |
+          chmod +x src/backup.sh
+          ./src/backup.sh
 
-    - name: Backup current version
-      run: |
-        chmod +x src/backup.sh
-        ./src/backup.sh
+      - name: Deploy to Heroku
+        run: |
+          heroku git:remote -a your-heroku-app-name
+          git push heroku main
 
-    - name: Deploy to Heroku
-      run: |
-        heroku git:remote -a your-heroku-app-name
-        git push heroku main
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          chmod +x src/rollback.sh
+          ./src/rollback.sh
 
-    - name: Rollback on failure
-      if: failure()
-      run: |
-        chmod +x src/rollback.sh
-        ./src/rollback.sh
+      - name: Set up Git user
+        run: |
+          git config --global user.email "freshtaensafi34@gmail.com"
+          git config --global user.name "Freshta Ensafi"
 
+      - name: Add Heroku remote
+        run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git
 
-    - name: Set up Git user
-      run: |
-        git config --global user.email "freshtaensafi34@gmail.com"
-        git config --global user.name "Freshta Ensafi"
-
-    - name: Add Heroku remote
-      run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git
-
-    - name: Login to Heroku
-    run: heroku auth:token -i ${{ secrets.HEROKU_API_KEY }}
-
-
-
+      - name: Login to Heroku
+        run: heroku auth:token -i ${{ secrets.HEROKU_API_KEY }}
