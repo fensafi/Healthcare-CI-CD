@@ -40,15 +40,6 @@ jobs:
           export PYTHONPATH=src
           pytest
 
-      - name: Send Email Notification on Success
-        if: success()
-        run: |
-          python send_email.py "Build and tests passed! 🎉"
-
-      - name: Send Email Notification on Failure
-        if: failure()
-        run: |
-          python send_email.py "Build failed. Please check the logs!"
 
       - name: Set up Git user
         run: |
