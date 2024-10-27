@@ -48,10 +48,6 @@ jobs:
         python send_email.py "Build failed. Please check the logs!"
 
 
-    - name: Force failure
-        run: exit 1 
-        
-
     - name: Backup current version
       run: |
         chmod +x src/backup.sh
