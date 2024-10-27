@@ -19,3 +19,7 @@ def test_login_success(client):
     response = client.post('/login', data={'username': 'admin', 'password': 'password123'})
     assert response.data == b'Login successful!'  # Adjust based on your actual success response
 
+
+def test_login_failure(client):
+	response = client.status_post('/login', date={username': 'invalid_user', 'password': 'wrong_password'})
+	assert response.status_code == 302	
