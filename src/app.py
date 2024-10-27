@@ -13,14 +13,15 @@ users = {
     "user1": "mypassword",
 }
 
+@app.route('/')
+def index():
+    return render_template('login.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        # Introduce an intentional error for testing
-        raise Exception("Testing email notification!")
 
         # Check if the username exists and the password matches
         if username in users and users[username] == password:
@@ -30,7 +31,6 @@ def login():
             return redirect(url_for('login'))
 
     return render_template('login.html')
-
 
 if __name__ == "__main__":
     app.run(debug=True)
