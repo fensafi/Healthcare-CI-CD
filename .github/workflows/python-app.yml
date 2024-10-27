@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
   scheduel:
     - cron: '1 * * * *'
-  workflow_dispatch
+  workflow_dipatch:
 
 permissions:
   contents: read
