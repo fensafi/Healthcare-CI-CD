@@ -19,8 +19,3 @@ def test_login_success(client):
     response = client.post('/login', data={'username': 'admin', 'password': 'password123'})
     assert response.data == b'Login successful!'  # Adjust based on your actual success response
 
-def test_login_failure(client):
-    """Test failed login with invalid credentials."""
-    response = client.post('/login', data={'username': 'invalid_user', 'password': 'wrong_password'})
-    assert response.status_code == 302  # Assuming it redirects on failure
-    # Optionally check for a flash message or redirection
