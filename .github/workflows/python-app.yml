@@ -50,22 +50,6 @@ jobs:
         run: |
           python send_email.py "Build failed. Please check the logs!"
 
-      - name: Backup current version
-        run: |
-          chmod +x src/backup.sh
-          ./src/backup.sh
-
-      - name: Deploy to Heroku
-        run: |
-          heroku git:remote -a your-heroku-app-name
-          git push heroku main
-
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          chmod +x src/rollback.sh
-          ./src/rollback.sh
-
       - name: Set up Git user
         run: |
           git config --global user.email "freshtaensafi34@gmail.com"
@@ -73,6 +57,21 @@ jobs:
 
       - name: Add Heroku remote
         run: git remote add heroku https://git.heroku.com/polar-mesa-86503.git
+
+      - name: Backup current version
+        run: |
+          chmod +x src/backup.sh
+          ./src/backup.sh
+
+      - name: Deploy to Heroku
+        run: |
+          git push heroku main
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          chmod +x src/rollback.sh
+          ./src/rollback.sh
 
       - name: Login to Heroku
         run: heroku auth:token -i ${{ secrets.HEROKU_API_KEY }}
