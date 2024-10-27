@@ -5,13 +5,13 @@ from sendgrid.helpers.mail import Mail
 
 def send_email(subject):
 	message = Mail(
-		from_email=os.environ.get('SENDGRID_EMAIL')
+		from_email=os.environ.get('SENDGRID_EMAIL'),
 		to_emails='cs396group@gmail.com',
 		subject=subject,
 		plain_text_content='Check the GitHub Actions for more details.')
 
 	try:
-		sg SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+		sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 		sg.send(message)
 		print(f"Email sent: {subject}")
 	except Exception as e:
