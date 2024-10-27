@@ -9,7 +9,7 @@ def client():
 
 def test_index(client):
     """Test the index route."""
-    response = client.get('')
+    response = client.get('/')
     assert response.status_code == 200
     assert b'Login' in response.data  # Check for a specific string in the response data
     assert b'username' in response.data  # Check if the username field exists in the login form
